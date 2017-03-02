@@ -9,6 +9,24 @@
         $options = $options . "<option value='" . $row['categoryID'] . "'>" . $row['categoryName'] . "</option>";
     }
 
+    if (isset($_POST['add']))
+    {
+        $catid = $_POST['category'];
+        $name = mysqli_real_escape_string($con,$_POST['name']);
+        $desc = mysqli_real_escape_string($con,$_POST['desc']);
+        $price = $_POST['price'];
+        $file = $_FILES['image'];
+        $fileName = $file['name'];
+        
+        $filePath = "..\\img\\products\\" . basename($fileName);
+        
+        $sql_add = "INSERT INTO products ('', '$catid', '$name', '$desc', $price, '$fileName');";
+        
+        $con->query($sql_add);
+        move_uploaded_file($_FILES['image']['tmp_name'], $filePath);
+        #$con->close();
+        //header('location: index.php');
+    }
 ?>
 
 <!DOCTYPE HTML>
@@ -30,11 +48,6 @@
                         <div class="col-lg-8">
                             <select name="category" class="form-control" required>
                                 <option value="">Select one...</option>
-                                <option value="">Appetizer</option>                                        
-                                <option value="">Beverages</option>   
-                                <option value="">Main Course</option>   
-                                <option value="">Soup</option>   
-                                <option value="">Desert</option>   
                                 <?php echo $options; ?>
                             </select>
                         </div>
@@ -60,7 +73,7 @@
                     <div class="form-group">
                         <label class="control-label col-lg-4">Price</label>
                         <div class="col-lg-8">
-                            
+                            <input name="price" type="number" min="0.01" max="9999.99" step="0.01" class="form-control" required/>
                         </div>
                     </div>
                     <div class="form-group">
